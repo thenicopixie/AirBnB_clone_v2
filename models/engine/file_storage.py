@@ -71,4 +71,4 @@ class FileStorage:
             del(self.__objects[key])
             self.save()
         except BaseException:
-            print("** no instance found **")
+            pass
