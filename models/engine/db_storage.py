@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+"""DBStorage engine"""
 from os import getenv
 from sqlalchemy import create_engine
 from models.user import User
@@ -6,7 +8,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
-
+from models.base_model import BaseModel, Base
 
 class DBStorage:
     """ engine DBStorage"""
@@ -26,11 +28,11 @@ class DBStorage:
         """Instantiation of DBStorage class
         """
         self.__engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'
-                                      .format(getenv(HBNB_MYSQL_USER),
-                                              getenv(HBNB_MYSQL_PWD),
-                                              getenv(HBNB_MYSQL_DB)),
+                                      .format(getenv('HBNB_MYSQL_USER'),
+                                              getenv('HBNB_MYSQL_PWD'),
+                                              getenv('HBNB_MYSQL_DB')),
                                       pool_pre_ping=True)
-        if getenv(HBNB_ENV) == "test":
+        if getenv('HBNB_ENV') == "test":
             Base.metadata.drop_all(bind=engine)
 
     def all(self, cls=None):
@@ -69,6 +71,6 @@ class DBStorage:
         """reate all tables in the database and
         create the current database session
         """
-        Base.metadata.create_all(engine)
+        Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=engine, expire_on_commit=False)
         Session = scoped_session(session_factory)
