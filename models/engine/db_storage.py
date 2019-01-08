@@ -9,6 +9,9 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from models.base_model import BaseModel, Base
+from sqlalchemy.orm import sessionmaker 
+from sqlalchemy.orm import scoped_session
+
 
 class DBStorage:
     """ engine DBStorage"""
@@ -27,9 +30,10 @@ class DBStorage:
     def __init__(self):
         """Instantiation of DBStorage class
         """
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
                                       .format(getenv('HBNB_MYSQL_USER'),
                                               getenv('HBNB_MYSQL_PWD'),
+                                              getenv('HBNB_MYSQL_HOST'),
                                               getenv('HBNB_MYSQL_DB')),
                                       pool_pre_ping=True)
         if getenv('HBNB_ENV') == "test":
@@ -44,16 +48,16 @@ class DBStorage:
             key = '{}.{}'.format(obj.__class__.__name__, obj.id)
             d[key] = obj
         else:
-            for obj in self.__session.query(cls_dict.values()):
-                key = '{}.{}'.format(obj.__class__.__name__, obj.id)
-                d[key] = obj
+            for value in cls_dict.values():
+                for obj in self.__session.query(value):
+                    key = '{}.{}'.format(obj.__class__.__name__, obj.id)
+                    d[key] = obj
         return d
 
     def new(self, obj):
         """add the object to the current database session (self.__session)
         """
         self.__session.add(obj)
-        self.save()
 
     def save(self):
         """commit all changes of the current database session (self.__session)
@@ -65,12 +69,11 @@ class DBStorage:
         """
         if obj:
             self.__session.delete(obj)
-            self.save()
 
     def reload(self):
-        """reate all tables in the database and
+        """create all tables in the database and
         create the current database session
         """
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=engine, expire_on_commit=False)
-        Session = scoped_session(session_factory)
+        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        self.__session = scoped_session(session_factory)
