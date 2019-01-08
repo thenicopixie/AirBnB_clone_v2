@@ -3,6 +3,10 @@
 import uuid
 import models
 from datetime import datetime
+from sqlalchemy import declarative_base
+from sqlalchemy import Column, String, Integer
+
+Base = declarative_base()
 
 
 class BaseModel:
@@ -27,9 +31,11 @@ class BaseModel:
                 if key != "__class__":
                     setattr(self, key, value)
         else:
-            self.id = str(uuid.uuid4())
-            self.created_at = self.updated_at = datetime.now()
-            models.storage.new(self)
+            self.id = Column(String(60), primary_key=True, nullable=False)
+            self.created_at = Column(DateTime, default="datetime.utcnow()",
+                                     nullable=False)
+            self.updated_at = Column(DateTime, default="datetime.utcnow()",
+                                     nullable=False)
 
     def __str__(self):
         """returns a string
@@ -48,6 +54,7 @@ class BaseModel:
         """updates the public instance attribute updated_at to current
         """
         self.updated_at = datetime.now()
+        models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
@@ -59,4 +66,11 @@ class BaseModel:
         my_dict["__class__"] = str(type(self).__name__)
         my_dict["created_at"] = self.created_at.isoformat()
         my_dict["updated_at"] = self.updated_at.isoformat()
+        if my_dict.get("_sa_instance_state"):
+            my_dict.pop("_sa_instance_state")
         return my_dict
+
+    def delete(self):
+        """Delete the current instance from the storage
+        """
+        models.storage.delete(self)
