@@ -14,8 +14,11 @@ from sqlalchemy.orm import scoped_session
 
 
 class DBStorage:
-    """ engine DBStorage"""
-
+    """ DBStorage class
+    Attributes:
+        __engine:  an instance of Engine
+        __session: Session objects which are bound to our database
+    """
     __engine = None
     __session = None
 
@@ -32,7 +35,12 @@ class DBStorage:
             Base.metadata.drop_all(bind=engine)
 
     def all(self, cls=None):
-        """query on the current database session
+        """query on the current database session (self.__session)
+        all objects depending of the class name(cls) or query all
+        types of objects (User, State, City, Amenity, Place and Review)
+        if cls is None.
+            Return:
+               return a dictionary
         """
         d = {}
         cls_list = [State, City]
