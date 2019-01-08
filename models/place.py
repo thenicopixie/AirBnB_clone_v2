@@ -6,6 +6,17 @@ from sqlalchemy.orm import relationship
 from models.review import Review
 
 
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id',
+                             String(60),
+                             nullable=False,
+                             ForeignKey('places.id')),
+                      Column('amenity_id',
+                             String(60),
+                             nullable=False,
+                             ForeignKey('amenities.id')))
+
+
 class Place(BaseModel, Base):
     """This is the class for Place
     Attributes:
@@ -34,6 +45,11 @@ class Place(BaseModel, Base):
     longitude = Column(Float, nullable=True)
     amenity_ids = []
     reviews = relationship('Review', cascade='all, delete', backref='place')
+    amenities = relationship("Amenity",
+                             secondary=place_amenity,
+                             viewonly=False,
+                             backref='place'
+                             )
 
     @property
     def reviews(self):
