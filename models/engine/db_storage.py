@@ -43,7 +43,7 @@ class DBStorage:
                return a dictionary
         """
         d = {}
-        cls_list = [State, City, User]
+        cls_list = [State, City, User, Place]
         if cls:
             obj = self.__session.query(cls).all()
             key = '{}.{}'.format(obj.__class__.__name__, obj.id)
