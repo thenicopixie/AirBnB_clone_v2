@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """This is the place class"""
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Integer, Float, ForeignKey
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from models.review import Review
 
@@ -9,12 +9,13 @@ from models.review import Review
 place_amenity = Table('place_amenity', Base.metadata,
                       Column('place_id',
                              String(60),
-                             nullable=False,
-                             ForeignKey('places.id')),
+                             ForeignKey('places.id'),
+                             primary_key=True),
                       Column('amenity_id',
                              String(60),
-                             nullable=False,
-                             ForeignKey('amenities.id')))
+                             ForeignKey('amenities.id'),
+                             primary_key=True)
+                      )
 
 
 class Place(BaseModel, Base):
