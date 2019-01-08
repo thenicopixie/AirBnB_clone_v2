@@ -2,6 +2,8 @@
 """This is the state class"""
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
+from os import getenv
 
 
 class State(BaseModel, Base):
@@ -9,9 +11,12 @@ class State(BaseModel, Base):
     Attributes:
         name: input name
     """
-    __tablename__ = 'states'
-    name = Column(String(128), nullable=False)
-    cities = relationship('City', cascade='all, delete', backref='state')
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
+        __tablename__ = 'states'
+        name = Column(String(128), nullable=False)
+        cities = relationship('City', cascade='all, delete', backref='state')
+    else:
+        name = ""
 
     @property
     def cities(self):
