@@ -9,7 +9,7 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from models.base_model import BaseModel, Base
-from sqlalchemy.orm import sessionmaker 
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
 
 
@@ -48,7 +48,7 @@ class DBStorage:
             key = '{}.{}'.format(obj.__class__.__name__, obj.id)
             d[key] = obj
         else:
-            for value in cls_dict.values():
+            for value in self.cls_dict.values():
                 for obj in self.__session.query(value):
                     key = '{}.{}'.format(obj.__class__.__name__, obj.id)
                     d[key] = obj
@@ -75,5 +75,6 @@ class DBStorage:
         create the current database session
         """
         Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False)
         self.__session = scoped_session(session_factory)
