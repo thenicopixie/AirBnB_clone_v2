@@ -17,7 +17,7 @@ class DBStorage:
     """ engine DBStorage"""
 
     __engine = None
-    __session = None 
+    __session = None
 
     def __init__(self):
         """Instantiation of DBStorage class
@@ -35,21 +35,17 @@ class DBStorage:
         """query on the current database session
         """
         d = {}
-        #cls_list = [User, State, City, Amenity, Place, Review]
         cls_list = [State, City]
         if cls:
-            objs = self.__session.query(cls).all()
-            for obj in objs:
-                key = '{}.{}'.format(obj.__class__.__name__, obj.id)
-                d[key] = obj
+            obj = self.__session.query(cls).all()
+            key = '{}.{}'.format(obj.__class__.__name__, obj.id)
+            d[key] = obj
         else:
             for item in cls_list:
                 for obj in self.__session.query(item):
                     key = '{}.{}'.format(obj.__class__.__name__, obj.id)
                     d[key] = obj
-
         return d
-
 
     def new(self, obj):
         """add the object to the current database session (self.__session)
