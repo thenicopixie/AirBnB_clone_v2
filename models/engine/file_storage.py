@@ -70,6 +70,6 @@ class FileStorage:
             key = '{}.{}'.format(obj.__class__.__name__, obj.id)
             try:
                 del(self.__objects[key])
-                self.save()
+                """self.save()"""
             except BaseException:
                 pass
