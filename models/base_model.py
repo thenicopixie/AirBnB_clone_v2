@@ -41,7 +41,7 @@ class BaseModel:
         else:
             self.id = str(uuid.uuid4())
             self.created_at = self.updated_at = datetime.now()
-            models.storage.new(self)
+
 
     def __str__(self):
         """returns a string
@@ -72,7 +72,7 @@ class BaseModel:
         my_dict["__class__"] = str(type(self).__name__)
         my_dict["created_at"] = self.created_at.isoformat()
         my_dict["updated_at"] = self.updated_at.isoformat()
-        if my_dict.get("_sa_instance_state"):
+        if "_sa_instance_state" in my_dict:
             my_dict.pop("_sa_instance_state")
         return my_dict
 
