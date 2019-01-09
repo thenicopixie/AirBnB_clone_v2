@@ -52,6 +52,18 @@ class TestFileStorage(unittest.TestCase):
         self.assertEqual(type(obj), dict)
         self.assertIs(obj, storage._FileStorage__objects)
 
+    def test_all_state(self):
+        """Tests all method with State class"""
+        storage = FileStorage()
+        state = State()
+        state.name = "Minnesota"
+        state.id = "55975"
+        storage.new(state)
+        obj = storage.all(State)
+        key = state.__class__.__name__ + "." + str(state.id)
+        self.assertIn(key, obj)
+        self.assertIsInstance(obj[key], State)
+
     def test_new(self):
         """test when new is created"""
         storage = FileStorage()
@@ -91,6 +103,18 @@ class TestFileStorage(unittest.TestCase):
                 self.assertEqual(line, "{}")
         self.assertIs(self.storage.reload(), None)
 
+    def test_delete_obj(self):
+        """Test for delete method"""
+        storage = FileStorage()
+        state = State()
+        state.name = "California"
+        state.id = 123123
+        storage.new(state)
+        obj = storage.all()
+        key = state.__class__.__name__ + "." + str(state.id)
+        self.assertIn(key, obj)
+        storage.delete(state)
+        self.assertNotIn(key, obj)
 
 if __name__ == "__main__":
     unittest.main()
