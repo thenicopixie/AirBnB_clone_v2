@@ -50,7 +50,7 @@ class HBNBCommand(cmd.Cmd):
                 if hasattr(obj, key):
                     type_attr = type(getattr(obj, key))
                     if type(value) != str:
-                        setattr(ojv, key, type_attr(value))
+                        setattr(obj, key, type_attr(value))
                     else:
                         value = value.strip("'\"")
                         setattr(obj, key, value)
