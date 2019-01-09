@@ -4,17 +4,20 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from models.review import Review
-
+import models
+from os import getenv
 
 place_amenity = Table('place_amenity', Base.metadata,
                       Column('place_id',
                              String(60),
                              ForeignKey('places.id'),
-                             primary_key=True),
+                             primary_key=True,
+                             nullable=False),
                       Column('amenity_id',
                              String(60),
                              ForeignKey('amenities.id'),
-                             primary_key=True)
+                             primary_key=True,
+                             nullable=False)
                       )
 
 
@@ -44,34 +47,38 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, default=0, nullable=False)
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
-    amenity_ids = []
-    reviews = relationship('Review', cascade='all, delete', backref='place')
+    reviews = relationship('Review',
+                           cascade='all, delete',
+                           backref='place')
     amenities = relationship("Amenity",
                              secondary=place_amenity,
                              viewonly=False,
-                             backref='place'
-                             )
+                             backref='place')
 
     @property
     def reviews(self):
         """ returns the list of Review instances with place_id
         equals to the current Place.id
         """
-        return [value for value in models.storage.all(Review).value()
+        return [value for value in models.storage.all(Review).values()
                 if value.place_id == self.id]
 
-    @property
-    def amenities(self):
-        """returns the list of Amenity instances based on the attribute
-        amenity_ids that contains all Amenity.id linked to the Place
-        """
-        return self.amenity_ids
+    if getenv('HBNB_TYPE_STORAGE') == 'file':
+        @property
+        def amenities(self):
+            """returns the list of Amenity instances based on the attribute
+            amenity_ids that contains all Amenity.id linked to the Place
+            """
+            print("getter")
+            return [value
+                    for value in models.storage.all(models.Amenity).values()
+                    if value.id in self.amenity_ids]
 
-    @amenities.setter
-    def amenities(self, value):
-        """handles append method for adding an Amenity.id to
-        the attribute amenity_ids
-        """
-        for value in models.storage.all(Amenity).value():
-            if value.id == self.id:
-                self.amenity_ids.append(value)
+        @amenities.setter
+        def amenities(self, obj):
+            """handles append method for adding an Amenity.id to
+            the attribute amenity_ids
+            """
+            if isinstance(obj, models.Amenity):
+                if self.id in self.amenity_ids:
+                    self.amenity_ids.append(obj.id)
