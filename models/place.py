@@ -59,3 +59,19 @@ class Place(BaseModel, Base):
         """
         return [value for value in models.storage.all(Review).value()
                 if value.place_id == self.id]
+
+    @property
+    def amenities(self):
+        """returns the list of Amenity instances based on the attribute
+        amenity_ids that contains all Amenity.id linked to the Place
+        """
+        return self.amenity_ids
+
+    @amenities.setter
+    def amenities(self, value):
+        """handles append method for adding an Amenity.id to
+        the attribute amenity_ids
+        """
+        for value in models.storage.all(Amenity).value():
+            if value.id == self.id:
+                self.amenity_ids.append(value)
