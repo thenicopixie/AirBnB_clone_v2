@@ -54,6 +54,7 @@ class Place(BaseModel, Base):
                              secondary=place_amenity,
                              viewonly=False,
                              backref='place')
+    amenity_ids = []
 
     @property
     def reviews(self):
@@ -69,7 +70,6 @@ class Place(BaseModel, Base):
             """returns the list of Amenity instances based on the attribute
             amenity_ids that contains all Amenity.id linked to the Place
             """
-            print("getter")
             return [value
                     for value in models.storage.all(models.Amenity).values()
                     if value.id in self.amenity_ids]
@@ -80,5 +80,5 @@ class Place(BaseModel, Base):
             the attribute amenity_ids
             """
             if isinstance(obj, models.Amenity):
-                if self.id in self.amenity_ids:
+                if self.id not in self.amenity_ids:
                     self.amenity_ids.append(obj.id)
