@@ -17,7 +17,7 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from models.engine.file_storage import FileStorage
-
+from models import storage
 
 class TestConsole(unittest.TestCase):
     """this will test the console"""
@@ -33,11 +33,11 @@ class TestConsole(unittest.TestCase):
         del cls.consol
 
     def tearDown(self):
-        """Remove temporary file (file.json) created as a result"""
-        try:
-            os.remove("file.json")
-        except Exception:
-            pass
+        """ teardown tests """
+        storage.reload()
+        all_objs = storage.all()
+        all_objs.clear()
+        storage.save()
 
     def test_pep8_console(self):
         """Pep8 console.py"""
@@ -88,6 +88,45 @@ class TestConsole(unittest.TestCase):
             self.consol.onecmd("all User")
             self.assertEqual(
                 "[[User]", f.getvalue()[:7])
+
+    def test_create_with_attributes_noSpace(self):
+        """Test create command inpout with attributes"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd("create State name='California'")
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd("all State")
+            self.assertEqual(
+                "[[State]", f.getvalue()[:8])
+            self.assertIn(
+                "California", f.getvalue())
+
+    def test_create_with_more_attributes(self):
+        """Test create command inpout with more attributes"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd('create State name="California" num1=3 num2=2.4')
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd("all State")
+            self.assertEqual(
+                "[[State]", f.getvalue()[:8])
+            self.assertIn(
+                "California", f.getvalue())
+            self.assertIn(
+                "3", f.getvalue())
+            self.assertIn(
+                "2.4", f.getvalue())
+
+    def test_create_with_attributes_withSpace(self):
+        """Test create command inpout with attributes"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd("create City name='San_Francisco'")
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd("all City")
+            self.assertEqual(
+                "[[City]", f.getvalue()[:7])
+            self.assertNotIn(
+                "San_Francisco", f.getvalue())
+            self.assertIn(       
+                "San Francisco", f.getvalue())
 
     def test_show(self):
         """Test show command inpout"""
@@ -211,6 +250,8 @@ class TestConsole(unittest.TestCase):
 
     def test_update(self):
         """Test alternate destroy command inpout"""
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.consol.onecmd("create User")
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("sldkfjsl.update()")
             self.assertEqual(
