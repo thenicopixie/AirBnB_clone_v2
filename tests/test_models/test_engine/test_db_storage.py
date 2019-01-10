@@ -1,4 +1,4 @@
-#!/usr/bin/python3                                                                                   
+#!/usr/bin/python3
 """test for db storage"""
 import unittest
 from unittest.mock import patch
@@ -19,11 +19,12 @@ from models.review import Review
 from models.engine.file_storage import FileStorage
 from models.engine.db_storage import DBStorage
 
+
 class TestDbStorage(unittest.TestCase):
     """this will test the db_storage"""
     """
     def test_pep8_db(self):
-        
+
         style = pep8.StyleGuide(quiet=True)
         p = style.check_files(["db_storage.py"])
         self.assertEqual(p.total_errors, 0, 'fix Pep8')
