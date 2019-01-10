@@ -19,6 +19,7 @@ from models.review import Review
 from models.engine.file_storage import FileStorage
 from models import storage
 
+
 class TestConsole(unittest.TestCase):
     """this will test the console"""
 
@@ -103,7 +104,8 @@ class TestConsole(unittest.TestCase):
     def test_create_with_more_attributes(self):
         """Test create command inpout with more attributes"""
         with patch('sys.stdout', new=StringIO()) as f:
-            self.consol.onecmd('create State name="California" num1=3 num2=2.4')
+            string = 'create State name="California" num1=3 num2=2.4'
+            self.consol.onecmd(string)
         with patch('sys.stdout', new=StringIO()) as f:
             self.consol.onecmd("all State")
             self.assertEqual(
@@ -125,7 +127,7 @@ class TestConsole(unittest.TestCase):
                 "[[City]", f.getvalue()[:7])
             self.assertNotIn(
                 "San_Francisco", f.getvalue())
-            self.assertIn(       
+            self.assertIn(
                 "San Francisco", f.getvalue())
 
     def test_show(self):
