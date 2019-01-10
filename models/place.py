@@ -64,7 +64,7 @@ class Place(BaseModel, Base):
         return [value for value in models.storage.all(Review).values()
                 if value.place_id == self.id]
 
-    if getenv('HBNB_TYPE_STORAGE') == 'file':
+    if getenv('HBNB_TYPE_STORAGE') != 'db':
         @property
         def amenities(self):
             """returns the list of Amenity instances based on the attribute
