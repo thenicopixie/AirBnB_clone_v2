@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # This script sets up a web server for deployment
-apt-get update
-apt-get install nginx
+apt-get -y update
+apt-get -y install nginx
 mkdir -p /data/
 mkdir -p /data/web_static/
 mkdir -p /data/web_static/releases/
