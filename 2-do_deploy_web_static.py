@@ -30,27 +30,25 @@ def do_deploy(archive_path):
         return False
 
     rel = "/data/web_static/releases/"
-    fpath = os.path.basename("{}".format(archive_path))
-    print("FPATH: {}".format(fpath))
-    print("REL: {}".format(rel))
+    fpath = archive_path.split("/")[1]
     try:
         """upload archive to the /tmp directory"""
         put(archive_path, "/tmp/")
 
         """uncompress the archive to a folder /data/web_static/releases/..."""
-        run("mkdir -p {}{}".format(rel, fpath))
-        run("tar -xzf /tmp/{} -C {}{}".format(fpath, rel, fpath))
+        run("sudo mkdir -p {}{}".format(rel, fpath))
+        run("sudo tar -xzf /tmp/{} -C {}{}".format(fpath, rel, fpath))
 
         """delete the archive from the web server"""
-        run("rm /tmp/{}".format(fpath))
+        run("sudo rm /tmp/{}".format(fpath))
 
-        run("mv {}{}/web_static/* {}{}/".format(rel, fpath, rel, fpath))
+        run("sudo mv {}{}/web_static/* {}{}/".format(rel, fpath, rel, fpath))
         """delete the symbolic link from web server"""
-        run("rm -rf {}{}/web_static".format(rel, fpath))
-        run("rm -rf /data/web_static/current")
+        run("sudo rm -rf {}{}/web_static".format(rel, fpath))
+        run("sudo rm -rf /data/web_static/current")
 
         """create a symlink between files"""
-        run("ln -s {}{}/ /data/web_static/current".format(rel, fname))
+        run("sudo ln -s {}{}/ /data/web_static/current".format(rel, fname))
 
         return True
 
