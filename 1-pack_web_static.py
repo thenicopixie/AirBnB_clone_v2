@@ -14,5 +14,5 @@ def do_pack():
     tgz_file = 'web_static_' + current_time + '.tgz'
     local("tar -cvzf {} ./web_static".format(tgz_file))
     local("mv {} versions".format(tgz_file))
-    fpath = "readlink -f {}".format(tgz_file)
+    fpath = local("readlink -f {}".format(tgz_file))
     return fpath
