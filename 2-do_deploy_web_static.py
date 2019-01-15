@@ -26,13 +26,13 @@ def do_pack():
 
 def do_deploy(archive_path):
     """Distributes an archive to te web server"""
-    result = run("ls -l {}".format(archive_path))
-    if result.failed:
+    if not archive_path:
         return False
 
     rel = "/data/web_static/releases/"
     fpath = os.path.basename("{}".format(archive_path))
-
+    print("FPATH: {}".format(fpath))
+    print("REL: {}".format(rel))
     try:
         """upload archive to the /tmp directory"""
         put(archive_path, "/tmp/")
@@ -44,7 +44,7 @@ def do_deploy(archive_path):
         """delete the archive from the web server"""
         run("rm /tmp/{}".format(fpath))
 
-        run("mv {}{}web_static/* {}{}/".format(rel, fpath, rel, fpath))
+        run("mv {}{}/web_static/* {}{}/".format(rel, fpath, rel, fpath))
         """delete the symbolic link from web server"""
         run("rm -rf {}{}/web_static".format(rel, fpath))
         run("rm -rf /data/web_static/current")
