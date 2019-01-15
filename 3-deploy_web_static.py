@@ -18,7 +18,7 @@ def do_pack():
         tgz_file = 'web_static_' + current_time + '.tgz'
         local("tar -cvzf {} ./web_static".format(tgz_file))
         local("mv {} versions".format(tgz_file))
-        fpath = "version/web_static{}.tgz".format(current_time)
+        fpath = "versions/web_static_{}.tgz".format(current_time)
         return fpath
     except Exception:
         return None
@@ -26,7 +26,7 @@ def do_pack():
 
 def do_deploy(archive_path):
     """Distributes an archive to te web server"""
-    if not archive_path:
+    if not os.path.exists(archive_path) and not os.path.isfile(archive_path):
         return False
 
     rel = "/data/web_static/releases/"
@@ -35,7 +35,6 @@ def do_deploy(archive_path):
     try:
         """upload archive to the /tmp directory"""
         put(archive_path, "/tmp/")
-
         """uncompress the archive to a folder /data/web_static/releases/..."""
         run("sudo mkdir -p {}{}".format(rel, fpath))
         run("sudo tar -xzf /tmp/{} -C {}".format(fpath, dest))
@@ -50,17 +49,15 @@ def do_deploy(archive_path):
 
         """create a symlink between files"""
         run("sudo ln -s {} /data/web_static/current".format(dest))
-
         return True
-
     except Exception:
         return False
 
 
 def deploy():
     """creates and distributes an archive to the web server"""
-    a_path = do_pack()
-    if a_path is None:
+    apath = do_pack()
+    if apath:
+        return do_deploy(apath)
+    else:
         return False
-    val = do_deploy(a_path)
-    return(val)
