@@ -26,7 +26,7 @@ def do_pack():
 
 def do_deploy(archive_path):
     """Distributes an archive to te web server"""
-    if not os.path.exists(archive_path) and not os.path.isfile(archive_path):
+    if not archive_path:
         return False
 
     rel = "/data/web_static/releases/"
