@@ -23,6 +23,7 @@ def do_pack():
     except Exception:
         return None
 
+
 def do_deploy(archive_path):
     """Distributes an archive to te web server"""
     result = run("ls -l {}".format(archive_path))
@@ -36,7 +37,7 @@ def do_deploy(archive_path):
         """upload archive to the /tmp directory"""
         put(archive_path, "/tmp/")
 
-        """uncompress the archive to the folder /data/web_static/releases/..."""
+        """uncompress the archive to a folder /data/web_static/releases/..."""
         run("mkdir -p {}{}".format(rel, fpath))
         run("tar -xzf /tmp/{} -C {}{}".format(fpath, rel, fpath))
 
@@ -53,4 +54,3 @@ def do_deploy(archive_path):
         return True
     except Exception:
         return False
-
