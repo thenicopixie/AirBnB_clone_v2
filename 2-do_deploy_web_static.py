@@ -30,7 +30,7 @@ def do_deploy(archive_path):
         return False
 
     rel = "/data/web_static/releases/"
-    fpath = archive_path.split("/")[1]
+    fpath = os.path.basename("{}".format(archive_path))
     dest = rel + fpath
     try:
         """upload archive to the /tmp directory"""
