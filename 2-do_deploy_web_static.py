@@ -31,24 +31,25 @@ def do_deploy(archive_path):
 
     rel = "/data/web_static/releases/"
     fpath = archive_path.split("/")[1]
+    dest = rel + fpath
     try:
         """upload archive to the /tmp directory"""
         put(archive_path, "/tmp/")
 
         """uncompress the archive to a folder /data/web_static/releases/..."""
         run("sudo mkdir -p {}{}".format(rel, fpath))
-        run("sudo tar -xzf /tmp/{} -C {}{}".format(fpath, rel, fpath))
+        run("sudo tar -xzf /tmp/{} -C {}".format(fpath, dest))
 
         """delete the archive from the web server"""
         run("sudo rm /tmp/{}".format(fpath))
 
-        run("sudo mv {}{}/web_static/* {}{}/".format(rel, fpath, rel, fpath))
+        run("sudo mv {}/web_static/* {}/".format(dest, dest))
         """delete the symbolic link from web server"""
-        run("sudo rm -rf {}{}/web_static".format(rel, fpath))
+        run("sudo rm -rf {}/web_static".format(dest))
         run("sudo rm -rf /data/web_static/current")
 
         """create a symlink between files"""
-        run("sudo ln -sf {}{}/ /data/web_static/current".format(rel, fname))
+        run("sudo ln -s {} /data/web_static/current".format(dest))
 
         return True
 
