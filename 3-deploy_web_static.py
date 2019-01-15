@@ -59,8 +59,8 @@ def do_deploy(archive_path):
 
 def deploy():
     """creates and distributes an archive to the web server"""
-    try:
-        a_path = do_pack()
-    except Exception:
-        return False
-    return do_deploy(a_path)
+    a_path = do_pack()
+    if a_path:
+        val = do_deploy(a_path)
+        return val
+    return False
