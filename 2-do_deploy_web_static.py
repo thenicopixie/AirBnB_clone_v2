@@ -50,7 +50,9 @@ def do_deploy(archive_path):
         run("rm -rf /data/web_static/current")
 
         """create a symlink between files"""
-        run("ln -s {}{} /data/web_static/current".format(rel, fname))
+        run("ln -s {}{}/ /data/web_static/current".format(rel, fname))
+
         return True
+
     except Exception:
         return False
