@@ -26,10 +26,9 @@ def python_text(text="is cool"):
     return 'Python {}'.format(text)
 
 
-@app.route('/number/<n>', strict_slashes=False)
+@app.route('/number/<int:n>', strict_slashes=False)
 def number_n(n):
-    if n.isdigit():
-        return '{} is a number'.format(n)
+    return '{} is a number'.format(n)
 
 
 if __name__ == "__main__":
