@@ -21,6 +21,7 @@ def states():
 def states_id(id=None):
     states = list(storage.all("State").values())
     cities = list(storage.all("City").values())
+    states.sort(key=lambda i: i.name)
     cities.sort(key=lambda i: i.name)
     return render_template('9-states.html',
                            states=states, cities=cities, id=id)
