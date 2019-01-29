@@ -4,6 +4,8 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from models.city import City
+from os import getenv
+import models
 
 
 class State(BaseModel, Base):
@@ -22,3 +24,11 @@ class State(BaseModel, Base):
         """
         return [value for value in models.storage.all(City).values()
                 if value.state_id == self.id]
+
+    if getenv('HBNB_MYSQL_DB') != 'db':
+        @property
+        def cities(self):
+            """Getter method to return the list of City objects
+            from storage linked to the current State"""
+            return [value for value in models.storage.all(City).values()
+                    if value.state_id == self.id]
