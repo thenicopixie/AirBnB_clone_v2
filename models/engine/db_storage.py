@@ -45,7 +45,7 @@ class DBStorage:
         d = {}
         cls_list = [State, City, User, Place, Review, Amenity]
         if cls:
-            for obj in self.__session.query(cls).all():
+            for obj in self.__session.query(eval(cls)).all():
                 key = '{}.{}'.format(obj.__class__.__name__, obj.id)
                 d[key] = obj
         else:
@@ -79,3 +79,7 @@ class DBStorage:
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
         self.__session = scoped_session(session_factory)
+
+    def close(self):
+        """calls remove method on the private session attribute"""
+        self.__session.remove()
