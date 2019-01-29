@@ -18,7 +18,6 @@ def states():
 
 
 @app.route('/states/<id>', strict_slashes=False)
-@app.route('/states/', strict_slashes=False)
 def states_id(id=None):
     states = list(storage.all("State").values())
     cities = list(storage.all("City").values())
