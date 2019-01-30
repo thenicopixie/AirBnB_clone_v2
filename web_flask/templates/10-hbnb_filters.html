@@ -17,36 +17,35 @@
 	<div class="locations">
 	  <h3>States</h3>
 	  <h4>&nbsp;</h4>
+          {% if states %}
 	  <div class="popover">
 	    <ul>
+              {% for state in states %}
 	      <li>
-		<h2>Arizona:</h2>
+		<h2>{{ state.name }}</h2>
+                {% for city in cities if city.state_id == state.id %}
 		<ul>
-		  <li>Pheonix</li>
-		  <li>Sedona</li>
+		  <li>{{ city.name }}</li>
 		</ul>
+                {% endfor %}
 	      </li>
-	      <li>
-		<h2>California:</h2>
-		<ul>
-		  <li>LA</li>
-		  <li>SF</li>
-		</ul>
-	      </li>
+              {% endfor %}
 	    </ul>
 	  </div>
+          {% endif %}
 	</div>
 	<div class="amenities">
 	  <h3>Amenities</h3>
 	  <h4>&nbsp;</h4>
+          {% if amenities %}
 	  <div class="popover">
+            {% for amenity in amenities %}
 	    <ul>
-	      <li>Internet</li>
-	      <li>TV</li>
-	      <li>Kitchen</li>
-	      <li>Iron</li>
+	      <li>{{ amenity.name }}</li>
 	    </ul>
+            {% endfor %}
 	  </div>
+          {% endif %}
 	</div>
 	<button type="button">Search</button>
       </section>
