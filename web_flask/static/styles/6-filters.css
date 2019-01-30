@@ -62,14 +62,16 @@ button:hover {
     padding: 20px 0;
     margin-left: -5px;
     margin-top: 1%;
+    overflow: scroll;
+    max-height: 300px;
 }
 .locations .popover {
     margin-top: 1%;
+    overflow: scroll;
+    max-height: 300px;
 }
 .popover ul {
     list-style-type: none;
-    overflow: scroll;
-    max-height: 300px;
 }
 .amenities:hover .popover,
 .locations:hover .popover {
