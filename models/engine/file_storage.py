@@ -26,6 +26,8 @@ class FileStorage:
            returns the list of objects of one type of class
         """
         if cls:
+            if type(cls) == str:
+                cls = eval(cls)
             d = {}
             for key, value in self.__objects.items():
                 if value.__class__ == cls:
