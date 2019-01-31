@@ -27,8 +27,7 @@ article {
 
 article h2 {
     font-size: 30px;
-    display: inline-block;
-    margin-left: 90px;
+    display: flex;
     margin-top: 5px;
     margin-bottom: 32px;
 }
@@ -43,7 +42,7 @@ article h2 {
     font-size: 30px;
     float: right;
     line-height: 60px;
-    margin-top: -10px;
+    margin-top: -80px;
 }
 
 .information {
