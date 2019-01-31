@@ -16,10 +16,12 @@ def filters():
     states.sort(key=lambda i: i.name)
     cities = list(storage.all("City").values())
     amenities = list(storage.all("Amenity").values())
+    places = list(storage.all("Place").values())
     cities.sort(key=lambda i: i.name)
     amenities.sort(key=lambda i: i.name)
+    places.sort(key=lambda i: i.name)
     return render_template('100-hbnb.html', states=states,
-                           cities=cities, amenities=amenities)
+                           cities=cities, amenities=amenities, places=places)
 
 
 if __name__ == "__main__":
